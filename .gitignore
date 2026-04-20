@@ -1,0 +1,94 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+
+# ============================================
+# Android / Gradle
+# ============================================
+
+# Gradle build output
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Local configuration file (contains SDK path, API keys, etc.)
+local.properties
+
+# Android generated files
+*.apk
+*.aab
+*.ap_
+*.dex
+*.class
+
+# Native build
+.cxx/
+.externalNativeBuild/
+
+# Log files
+*.log
+
+# Lint
+lint/intermediates/
+lint/generated/
+lint/outputs/
+lint/tmp/
+
+# Proguard
+proguard/
+
+# Keystore files (nunca subir llaves de firma)
+*.jks
+*.keystore
+
+# ============================================
+# IntelliJ / Android Studio
+# ============================================
+
+.idea/
+
+*.ipr
+*.iws
+out/
+
+# Captures
+captures/
+
+# Android Studio Navigation editor temp files
+.navigation/
+
+# ============================================
+# macOS / Windows / Linux
+# ============================================
+
+
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ============================================
+# Otros
+# ============================================
+
+# Node (si algún día integras tooling en JS)
+node_modules/
+
+# Archivos temporales de editor
+*.swp
+*.swo
+*~
