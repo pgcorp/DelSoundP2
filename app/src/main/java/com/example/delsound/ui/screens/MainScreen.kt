@@ -69,9 +69,16 @@ fun MainScreen(
             startDestination = SoundInRoutes.LIBRARY,
             modifier = Modifier.padding(paddingValues)
         ){
-            composable(SoundInRoutes.LIBRARY) { LibraryScreen() }
+            composable(SoundInRoutes.LIBRARY) {
+                LibraryScreen(
+                    onPlaylistClick = { playlist ->
+                        navController.navigate("playlistDetail/${playlist.id}")
+                    }
+                )
+            }
             composable(SoundInRoutes.SEARCH) { SearchScreen() }
             composable(SoundInRoutes.PROFILE) { ProfileScreen() }
+            composable(SoundInRoutes.PLAYLIST_DETAIL ) {}
         } // fin de la NavHost
     } // fin de la lambda de Scaffold
 }
