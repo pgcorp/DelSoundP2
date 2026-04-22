@@ -2,6 +2,7 @@ package com.example.delsound.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -12,47 +13,99 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.delsound.ui.LibraryViewModel
+import com.example.delsound.ui.components.PlaylistBottomSheet
 import com.example.delsound.ui.components.PlaylistCard
 import com.example.delsound.ui.models.Playlist
 import com.example.delsound.ui.theme.DelSoundTheme
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryScreen(viewModel: LibraryViewModel = viewModel(), onPlaylistClick: (Playlist) -> Unit){
     // Obtener la lista de playlists desde el ViewModel como un StateFlow de Compose
-    val playlists by viewModel.playlists.collectAsStateWithLifecycle()
+    val selectedTab by viewModel.selectedTab.collectAsStateWithLifecycle()
+    val filteredPlaylist by viewModel.filteredPlaylist.collectAsStateWithLifecycle()
+    // Estado para la playlist seleccionada en el bottom sheet
+    var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Library") },
-            )
-        },
+        topBar = {    val playlists by viewModel.playlists.collectAsStateWithLifecycle()
+
+            Column(
+
+            ) {
+                TopAppBar(
+                    title = { Text(
+                        text = "Library",
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.fillMaxSize(),
+
+                    ) },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        titleContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                )
+                TabRow(
+                    selectedTabIndex = selectedTab,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ) {
+                    val tabs = listOf("All", "Favorites")
+                    tabs.forEachIndexed { index, tile ->
+                        Tab(
+                            selected = selectedTab == index,
+                            selectedContentColor = MaterialTheme.colorScheme.onPrimary,
+                            unselectedContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+                            onClick = { viewModel.onTabSelected(index) },
+                            text = { Text(tile) }
+                        )
+                    }
+                } // fin del TabRow
+            } // fin de la columna
+        },// fin del topBar
+
         floatingActionButton = {
             FloatingActionButton(onClick = { /* pendiente */ }) {
                 Icon(Icons.Default.Add, "Add Playlist")
             }
         }
-    ) {
+    ) // fin del scaffold
+    {// fin del scaffold
         paddingValues ->
-        if (playlists.isEmpty()) {
+        // change playlists to filteredPlaylist when tab is changed with lazy vertical grid
+        if (filteredPlaylist.isEmpty()) {
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues),
                 contentAlignment = Alignment.Center)
             {
-                Text("No playlists yet, click the button  + below to add one")
+                Text(
+                    text = if (selectedTab == 1) "No favorite playlists yet"
+                    else
+                        "No playlists yet, click the button  + below to add one"
+                )
             }
         }
         else{
@@ -65,15 +118,23 @@ fun LibraryScreen(viewModel: LibraryViewModel = viewModel(), onPlaylistClick: (P
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(playlists, key = { it.id }) { playlist ->
+                items(filteredPlaylist, key = { it.id }) { playlist ->
                     PlaylistCard(
                         playlist = playlist,
                         onClick = { onPlaylistClick(playlist) },
-                        onLongClick = { /* later */ }
+                        onLongClick = { selectedPlaylist = playlist }
                     )
                 }
-            }
-        }
+            } // fin del LazyVerticalGrid
+        } // fin del else de  filteredPlaylist.isEmpty()
+    } // fin del scaffold
+    selectedPlaylist?.let { playlist ->
+        PlaylistBottomSheet(
+            playlist = playlist,
+            onDismiss = { selectedPlaylist = null },
+            onToggleFavorite = { viewModel.toggleFavorite(it) },
+            onDelete = { viewModel.deletePlaylist(it) }
+        )
     }
 }
 

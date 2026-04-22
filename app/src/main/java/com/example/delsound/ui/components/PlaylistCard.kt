@@ -43,7 +43,7 @@ fun PlaylistCard(playlist: Playlist, onClick: () -> Unit, onLongClick: () -> Uni
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)   // ocupa todo el espacio disponible
+                    .weight(1f)   // ocupa all el espacio disponible
                     .background(
                         Color(playlist.colorHex.toColorInt())
                     ),
