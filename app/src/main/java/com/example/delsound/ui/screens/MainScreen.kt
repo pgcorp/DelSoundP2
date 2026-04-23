@@ -76,7 +76,13 @@ fun MainScreen(
                     }
                 )
             }
-            composable(SoundInRoutes.SEARCH) { SearchScreen() }
+            composable(SoundInRoutes.SEARCH) {
+                SearchScreen(
+                    onPlaylistClick = { playlist ->
+                        navController.navigate("playlistDetail/${playlist.id}")
+                    }
+                )
+            }
             composable(SoundInRoutes.PROFILE) { ProfileScreen() }
             composable(SoundInRoutes.PLAYLIST_DETAIL ) {}
         } // fin de la NavHost

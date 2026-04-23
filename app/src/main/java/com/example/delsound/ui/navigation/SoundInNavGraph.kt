@@ -2,11 +2,14 @@ package com.example.delsound.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.delsound.ui.UserSessionViewModel
 import com.example.delsound.ui.screens.LoginScreen
 import com.example.delsound.ui.screens.MainScreen
+import com.example.delsound.ui.screens.PlaylistDetailScreen
 import com.example.delsound.ui.screens.RegisterScreen
 
 @Composable
@@ -48,8 +51,20 @@ fun SoundInNavGraph(
                 }
             )
         }
-    }
 
+        composable(SoundInRoutes.PLAYLIST_DETAIL,
+            arguments = listOf(
+                navArgument("playlistId") {type = NavType.IntType})
+        ) {
+            backStackEntry ->
+            val playlistId = backStackEntry.arguments?.getInt("playlistId") ?: 0
+            // Mostrar el detalle de la playlist
+            PlaylistDetailScreen(playlistId = playlistId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+
+    }
 }
 
 
