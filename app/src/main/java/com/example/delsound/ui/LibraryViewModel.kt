@@ -3,6 +3,7 @@ package com.example.delsound.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.delsound.ui.models.Playlist
+import com.example.delsound.ui.models.Song
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -23,6 +24,7 @@ class LibraryViewModel : ViewModel() {
             Playlist(6, "Metal Covers", "Metal", 25, "#F44336")
         )
     )
+
     private val _selectedTab = MutableStateFlow(0)
 
 
@@ -47,6 +49,15 @@ class LibraryViewModel : ViewModel() {
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
+    )
+
+    val songs = listOf(
+        Song(1, "Bohemian Rhapsody", "Queen", 354, 1),
+        Song(2, "Blinding Lights", "The Weeknd", 200, 2),
+        Song(3, "HUMBLE.", "Kendrick Lamar", 177, 3),
+        Song(4, "Do I Wanna Know?", "Arctic Monkeys", 272, 4),
+        Song(5, "Moonlight Sonata", "Beethoven", 337, 5),
+        Song(6, "Master of Puppets", "Metallica", 515, 6)
     )
 
     // Funciones para manejar la lista de favoritos
