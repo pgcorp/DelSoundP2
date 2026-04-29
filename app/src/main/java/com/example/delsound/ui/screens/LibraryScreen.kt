@@ -1,5 +1,7 @@
 package com.example.delsound.ui.screens
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,8 @@ import com.example.delsound.ui.components.PlaylistBottomSheet
 import com.example.delsound.ui.components.PlaylistCard
 import com.example.delsound.ui.models.Playlist
 import com.example.delsound.ui.theme.DelSoundTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,11 +53,12 @@ fun LibraryScreen(viewModel: LibraryViewModel = viewModel(), onPlaylistClick: (P
     val filteredPlaylist by viewModel.filteredPlaylist.collectAsStateWithLifecycle()
     // Estado para la playlist seleccionada en el bottom sheet
     var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
-        topBar = {    val playlists by viewModel.playlists.collectAsStateWithLifecycle()
-
+        topBar = {
+            val playlists by viewModel.playlists.collectAsStateWithLifecycle()
             Column(
-
             ) {
                 TopAppBar(
                     title = { Text(
@@ -87,8 +93,37 @@ fun LibraryScreen(viewModel: LibraryViewModel = viewModel(), onPlaylistClick: (P
         },// fin del topBar
 
         floatingActionButton = {
-            FloatingActionButton(onClick = { /* pendiente */ }) {
-                Icon(Icons.Default.Add, "Add Playlist")
+            var fabState by remember { mutableStateOf("add") }
+            FloatingActionButton(onClick = {
+                if (fabState == "add") {
+                    fabState = "done"
+                    // back after 2 seconds
+                    scope.launch {
+                        delay(2000)
+                        fabState = "add"
+                    }
+                }
+            },
+                containerColor = MaterialTheme.colorScheme.primary
+            ) {
+                Crossfade(
+                    targetState = fabState,
+                    animationSpec = tween(durationMillis = 300),
+                    label = "fab icon transition"
+                ) {
+                    state ->
+                    when (state) {
+                        "add" -> Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Add playlist",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                        "done" -> Text(
+                            text = "Done",
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
             }
         }
     ) // fin del scaffold
