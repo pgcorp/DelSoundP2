@@ -12,8 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 
 
 class SearchViewModel : ViewModel() {
-    // Lista de canciones para la pantalla de búsqueda
-    // Variables Privadas para la lista de canciones y los filtros
+
 
     private val _query = MutableStateFlow("")
     private val _isSearchActive = MutableStateFlow(false)

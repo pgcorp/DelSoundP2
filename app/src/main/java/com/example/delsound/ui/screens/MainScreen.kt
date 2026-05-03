@@ -26,8 +26,8 @@ import com.example.delsound.ui.theme.DelSoundTheme
 
 @Composable
 fun MainScreen(
-    sessionViewModel: UserSessionViewModel, onLogout:() -> Unit
-){
+    sessionViewModel: UserSessionViewModel, onLogout: () -> Unit
+) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
@@ -45,8 +45,8 @@ fun MainScreen(
                     NavigationBarItem(
                         selected = currentRoute == route,
                         onClick = {
-                            navController.navigate(route){
-                                popUpTo(navController.graph.startDestinationId){
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) {
                                     saveState = true
                                 }
                                 launchSingleTop = true
@@ -64,12 +64,12 @@ fun MainScreen(
     ) // fin de la lambda de Scaffold
     {
         // cuidado con la importacion debe ser: import androidx.navigation.compose.NavHost
-        paddingValues ->
+            paddingValues ->
         NavHost(
             navController = navController,
             startDestination = SoundInRoutes.LIBRARY,
             modifier = Modifier.padding(paddingValues)
-        ){
+        ) {
             composable(SoundInRoutes.LIBRARY) {
                 LibraryScreen(
                     onPlaylistClick = { playlist ->
@@ -84,7 +84,9 @@ fun MainScreen(
                     }
                 )
             }
-            composable(SoundInRoutes.PROFILE) { ProfileScreen() }
+            composable(SoundInRoutes.PROFILE) {
+                ProfileScreen(sessionViewModel = sessionViewModel)
+            }
             composable(
                 route = SoundInRoutes.PLAYLIST_DETAIL,
                 arguments = listOf(navArgument("playlistId") { type = NavType.IntType })

@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.delsound.ui.LoginViewModel
+import com.example.delsound.ui.UserSessionViewModel
 import com.example.delsound.ui.theme.DelSoundTheme
 import kotlinx.coroutines.launch
 
@@ -62,7 +63,8 @@ fun LoginContent(
     rememberSession: Boolean,
     onRememberSession: (Boolean) -> Unit,
     onLoginClick: () -> Unit,
-    onNavigationToRegister: () -> Unit
+    onNavigationToRegister: () -> Unit,
+    sessionViewModel: UserSessionViewModel
 ){
 
 
@@ -183,7 +185,8 @@ fun LoginContent(
 fun LoginScreen(
     viewModel: LoginViewModel = viewModel() ,
     onNavigationToRegister: () -> Unit,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: () -> Unit,
+    sessionViewModel: UserSessionViewModel
 ){
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -223,7 +226,10 @@ fun LoginScreen(
                 val isValid = viewModel.validateAndLogin()
                 scope.launch {
                     if (isValid) {
-                        //snackBarHostState.showSnackbar( message = "Welcome to SoundIn" )
+                        sessionViewModel.login(
+                            name = "John Doe",        // ← datos dummy
+                            email = "john@soundin.com" // ← datos dummy
+                        )
                         onLoginSuccess()
                     } else {
                         snackBarHostState.showSnackbar(
@@ -232,12 +238,16 @@ fun LoginScreen(
                     }
                 }
             },
-            onNavigationToRegister = onNavigationToRegister
+            onNavigationToRegister = onNavigationToRegister,
+            sessionViewModel = sessionViewModel
         )
     }
 
 }
 
+
+
+private val previewSessionViewModel = UserSessionViewModel()
 
 @Preview(showBackground = true)
 @Composable
@@ -249,12 +259,13 @@ fun LoginScreenPreview(){
             onEmailChanged = {},
             emailError = false,
             password = "",
-            onPasswordChanged = {_: String ->},
+            onPasswordChanged = { _: String -> },
             passwordError = false,
             rememberSession = false,
-            onRememberSession = {_: Boolean ->},
+            onRememberSession = { _: Boolean -> },
             onLoginClick = {},
-            onNavigationToRegister = {}
+            onNavigationToRegister = {},
+            sessionViewModel = previewSessionViewModel
         )
     }
 }

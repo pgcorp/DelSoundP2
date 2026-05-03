@@ -23,6 +23,7 @@ fun SoundInNavGraph(
     ) {
         composable(SoundInRoutes.LOGIN) {
             LoginScreen(
+                sessionViewModel = sessionViewModel,
                 onNavigationToRegister = { navController.navigate(SoundInRoutes.REGISTER)
                 },
                 onLoginSuccess = {
