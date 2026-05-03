@@ -14,16 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 class SearchViewModel : ViewModel() {
     // Lista de canciones para la pantalla de búsqueda
     // Variables Privadas para la lista de canciones y los filtros
-    private val _allPlaylists = MutableStateFlow(
-        listOf(
-            Playlist(1, "Favourites", "Rock", 15, "#E91E63", isFavorite = true),
-            Playlist(2, "Pop Hits", "Pop", 20, "#2196F3"),
-            Playlist(3, "Hip Hop Jams", "Hip Hop", 12, "#FFC107"),
-            Playlist(4, "Indie Radio", "Indie", 8, "#4CAF50"),
-            Playlist(5, "Classical Music", "Classical", 18, "#9C27B0"),
-            Playlist(6, "Metal Covers", "Metal", 25, "#F44336")
-        )
-    )
+
     private val _query = MutableStateFlow("")
     private val _isSearchActive = MutableStateFlow(false)
     private val _durationRange = MutableStateFlow(0f..5400f)
@@ -35,7 +26,7 @@ class SearchViewModel : ViewModel() {
     val durationRange: StateFlow<ClosedFloatingPointRange<Float>> = _durationRange.asStateFlow()
 
     // filtered results by text and long time at the same time thanks to Combine
-    val searchResults: StateFlow<List<Playlist>> = combine(_allPlaylists, _query, _durationRange)
+    val searchResults: StateFlow<List<Playlist>> = combine(PlaylistRepository.playlists, _query, _durationRange)
     { playlists: List<Playlist>, query: String, range: ClosedFloatingPointRange<Float> ->
         playlists.filter { playlist ->
             // Filter 1: search by name or genre

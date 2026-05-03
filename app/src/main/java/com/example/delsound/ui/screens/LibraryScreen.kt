@@ -54,10 +54,11 @@ fun LibraryScreen(viewModel: LibraryViewModel = viewModel(), onPlaylistClick: (P
     // Estado para la playlist seleccionada en el bottom sheet
     var selectedPlaylist by remember { mutableStateOf<Playlist?>(null) }
     val scope = rememberCoroutineScope()
+    val playlists by viewModel.playlists.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
-            val playlists by viewModel.playlists.collectAsStateWithLifecycle()
+
             Column(
             ) {
                 TopAppBar(

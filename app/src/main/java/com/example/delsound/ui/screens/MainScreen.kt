@@ -14,11 +14,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.delsound.ui.UserSessionViewModel
 import com.example.delsound.ui.navigation.SoundInRoutes
 import com.example.delsound.ui.theme.DelSoundTheme
@@ -84,7 +85,16 @@ fun MainScreen(
                 )
             }
             composable(SoundInRoutes.PROFILE) { ProfileScreen() }
-            composable(SoundInRoutes.PLAYLIST_DETAIL ) {}
+            composable(
+                route = SoundInRoutes.PLAYLIST_DETAIL,
+                arguments = listOf(navArgument("playlistId") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val playlistId = backStackEntry.arguments?.getInt("playlistId") ?: 0
+                PlaylistDetailScreen(
+                    playlistId = playlistId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
         } // fin de la NavHost
     } // fin de la lambda de Scaffold
 }

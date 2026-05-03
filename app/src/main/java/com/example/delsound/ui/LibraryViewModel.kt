@@ -14,16 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 class LibraryViewModel : ViewModel() {
 
     // Privados para mantener la lista de playlists y el tab seleccionado
-    private val _playlists = MutableStateFlow(
-        listOf(
-            Playlist(1, "Favourites", "Rock", 15, "#E91E63", isFavorite = true),
-            Playlist(2, "Pop Hits", "Pop", 20, "#2196F3"),
-            Playlist(3, "Hip Hop Jams", "Hip Hop", 12, "#FFC107"),
-            Playlist(4, "Indie Radio", "Indie", 8, "#4CAF50"),
-            Playlist(5, "Classical Music", "Classical", 18, "#9C27B0"),
-            Playlist(6, "Metal Covers", "Metal", 25, "#F44336")
-        )
-    )
+
 
     private val _selectedTab = MutableStateFlow(0)
 
@@ -31,14 +22,14 @@ class LibraryViewModel : ViewModel() {
 
 
     // Publicas para acceder desde la UI y el ViewModel de LibraryScreen
-    val playlists: StateFlow<List<Playlist>> = _playlists.asStateFlow()
+    val playlists: StateFlow<List<Playlist>> = PlaylistRepository.playlists
 
     // State para el tab seleccionado en la LibraryScreen 0 = all, 1 = favorites
     val selectedTab: StateFlow<Int> = _selectedTab.asStateFlow()
 
     // Filtrar playlists según el tab seleccionado
     val filteredPlaylist: StateFlow<List<Playlist>> = combine(
-        _playlists, _selectedTab
+        PlaylistRepository.playlists, _selectedTab
     ) { playlists, tabIndex ->
         when (tabIndex) {
             0 -> playlists
@@ -51,31 +42,17 @@ class LibraryViewModel : ViewModel() {
         initialValue = emptyList()
     )
 
-    val songs = listOf(
-        Song(1, "Bohemian Rhapsody", "Queen", 354, 1),
-        Song(2, "Blinding Lights", "The Weeknd", 200, 2),
-        Song(3, "HUMBLE.", "Kendrick Lamar", 177, 3),
-        Song(4, "Do I Wanna Know?", "Arctic Monkeys", 272, 4),
-        Song(5, "Moonlight Sonata", "Beethoven", 337, 5),
-        Song(6, "Master of Puppets", "Metallica", 515, 6)
-    )
+
 
     // Funciones para manejar la lista de favoritos
 
     fun toggleFavorite(playlist: Playlist) {
-        _playlists.value = _playlists.value.map {
-            if (it.id == playlist.id) {
-                it.copy(isFavorite = !it.isFavorite)
-            } else {
-                it
-            }
-        }
+        PlaylistRepository.toggleFavorite(playlist)
+    }
+    fun deletePlaylist(playlist: Playlist) {
+        PlaylistRepository.deletePlaylist(playlist)
     }
 
-    // Delete playlist function to remove a playlist from the list
-    fun deletePlaylist(playlist: Playlist) {
-        _playlists.value = _playlists.value.filter { it.id != playlist.id }
-    }
 
     //
     fun onTabSelected(index: Int) {
