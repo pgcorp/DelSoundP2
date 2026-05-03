@@ -25,7 +25,8 @@ import com.example.delsound.ui.UserSessionViewModel
 
 @Composable
 fun ProfileScreen(
-    sessionViewModel: UserSessionViewModel = viewModel()
+    sessionViewModel: UserSessionViewModel = viewModel(),
+    onLogout: () -> Unit
 ) {
     val userName by sessionViewModel.userName.collectAsStateWithLifecycle()
     val userEmail by sessionViewModel.userEmail.collectAsStateWithLifecycle()
@@ -71,7 +72,9 @@ fun ProfileScreen(
 
         // ← agregar botón logout
         Button(
-            onClick = { sessionViewModel.logout() },
+            onClick = {
+                sessionViewModel.logout()
+                onLogout() },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Log Out")

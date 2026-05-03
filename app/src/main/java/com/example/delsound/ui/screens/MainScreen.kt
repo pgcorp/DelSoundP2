@@ -27,6 +27,7 @@ import com.example.delsound.ui.theme.DelSoundTheme
 @Composable
 fun MainScreen(
     sessionViewModel: UserSessionViewModel, onLogout: () -> Unit
+
 ) {
     val navController = rememberNavController()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
@@ -85,7 +86,10 @@ fun MainScreen(
                 )
             }
             composable(SoundInRoutes.PROFILE) {
-                ProfileScreen(sessionViewModel = sessionViewModel)
+                ProfileScreen(
+                    sessionViewModel = sessionViewModel,
+                    onLogout = onLogout
+                )
             }
             composable(
                 route = SoundInRoutes.PLAYLIST_DETAIL,

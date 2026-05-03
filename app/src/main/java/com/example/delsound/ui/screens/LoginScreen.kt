@@ -228,7 +228,8 @@ fun LoginScreen(
                     if (isValid) {
                         sessionViewModel.login(
                             name = "John Doe",        // ← datos dummy
-                            email = "john@soundin.com" // ← datos dummy
+                         //  email = "john@soundin.com" // ← datos dummy
+                            email = email // ← datos reales
                         )
                         onLoginSuccess()
                     } else {
